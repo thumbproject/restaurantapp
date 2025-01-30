@@ -1,7 +1,17 @@
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { CATEGORIES } from "../data/dummy-data";
+import { useNavigation } from "@react-navigation/native";
 
 const CategoryScreen = () => {
+  const navigation = useNavigation();
+
+  const navigateOverview = (items) => {
+    navigation.navigate("Overview", {
+      categoryId: items.item.id,
+      title: items.item.title,
+    });
+  };
+
   return (
     <View style={styles.screen}>
       <FlatList
@@ -14,7 +24,11 @@ const CategoryScreen = () => {
               { backgroundColor: itemData.item.color },
             ]}
           >
-            <Pressable android_ripple={{ color: "#ccc" }} style={{ flex: 1 }}>
+            <Pressable
+              android_ripple={{ color: "#ccc" }}
+              style={{ flex: 1 }}
+              onPress={() => navigateOverview(itemData)}
+            >
               <View style={styles.innterContainer}>
                 <Text style={styles.title}>{itemData.item.title}</Text>
               </View>
@@ -32,7 +46,7 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     padding: 12,
-    backgroundColor: "#000",
+    backgroundColor: "#222831",
   },
   outerContainer: {
     flex: 1,
@@ -50,6 +64,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: "bold",
+    color: "#222831",
   },
 });
 
