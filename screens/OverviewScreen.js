@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { MEALS } from "../data/dummy-data";
+import MealDesc from "../components/MealDesc";
 
 const CategoryDetailsScreen = ({ route }) => {
   const { categoryId, title } = route.params;
@@ -40,17 +41,11 @@ const CategoryDetailsScreen = ({ route }) => {
                 source={{ uri: itemData.item.imageUrl }}
               />
               <Text style={styles.title}>{itemData.item.title}</Text>
-              <View style={styles.descContainer}>
-                <Text style={styles.descTextStyle}>
-                  AFFORDABILITY: {itemData.item.affordability.toUpperCase()}
-                </Text>
-                <Text style={styles.descTextStyle}>
-                  COMPLEXITY: {itemData.item.complexity.toUpperCase()}
-                </Text>
-                <Text style={styles.descTextStyle}>
-                  DURATION: {itemData.item.duration} mins
-                </Text>
-              </View>
+              <MealDesc
+                affordability={itemData.item.affordability}
+                complexity={itemData.item.complexity}
+                duration={itemData.item.duration}
+              />
             </Pressable>
           </View>
         )}
@@ -62,7 +57,7 @@ const CategoryDetailsScreen = ({ route }) => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    padding: 16,
+    paddingHorizontal: 16,
     backgroundColor: "#222831",
   },
   container: {
@@ -84,14 +79,6 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     color: "#eeeeee",
     textAlign: "center",
-  },
-  descContainer: {
-    marginHorizontal: 16,
-    padding: 8,
-  },
-  descTextStyle: {
-    fontSize: 14,
-    color: "#eeeeee",
   },
 });
 
