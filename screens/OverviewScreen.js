@@ -1,23 +1,17 @@
 import React, { useEffect } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  Image,
-  Pressable,
-} from "react-native";
+import { View, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { MEALS } from "../data/dummy-data";
-import MealDesc from "../components/MealDesc";
+import Overview from "../components/Overview";
 
 const CategoryDetailsScreen = ({ route }) => {
   const { categoryId, title } = route.params;
-  const navigation = useNavigation();
 
-  const navigateToMealDetail = (mealId) => {
-    navigation.navigate("MealDetail", { mealId });
-  };
+  const items = MEALS.filter(
+    (item) => item.categoryIds.findIndex((id) => id === categoryId) >= 0
+  );
+
+  const navigation = useNavigation();
 
   useEffect(() => {
     navigation.setOptions({ title });
@@ -25,31 +19,7 @@ const CategoryDetailsScreen = ({ route }) => {
 
   return (
     <View style={styles.screen}>
-      <FlatList
-        data={MEALS.filter(
-          (item) => item.categoryIds.findIndex((id) => id === categoryId) >= 0
-        )}
-        keyExtractor={(item) => item.id}
-        renderItem={(itemData) => (
-          <View style={styles.container}>
-            <Pressable
-              android_ripple={{ color: "#393e46" }}
-              onPress={() => navigateToMealDetail(itemData.item.id)}
-            >
-              <Image
-                style={styles.imageStyle}
-                source={{ uri: itemData.item.imageUrl }}
-              />
-              <Text style={styles.title}>{itemData.item.title}</Text>
-              <MealDesc
-                affordability={itemData.item.affordability}
-                complexity={itemData.item.complexity}
-                duration={itemData.item.duration}
-              />
-            </Pressable>
-          </View>
-        )}
-      />
+      <Overview items={items} />
     </View>
   );
 };
@@ -58,6 +28,7 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     paddingHorizontal: 16,
+    paddingBottom: 60,
     backgroundColor: "#222831",
   },
   container: {

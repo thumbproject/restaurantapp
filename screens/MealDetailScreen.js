@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { View, Text, Image, ScrollView, StyleSheet } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { MEALS } from "../data/dummy-data";
 import MealDesc from "../components/MealDesc";
 import MealProcess from "../components/MealProcess";
 import Icon from "../components/Icon";
+import { FavouriteContext } from "../store/context/favourite-context";
 
 const MealDetailScreen = () => {
   const navigation = useNavigation();
@@ -13,12 +14,30 @@ const MealDetailScreen = () => {
 
   const meal = MEALS.find((meals) => meals.id === mealId);
 
+  const favouriteContext = useContext(FavouriteContext);
+  const isFavourite = favouriteContext.ids.find((id) => mealId == id);
+
+  const favouriteMealHandler = () => {
+    if (isFavourite) {
+      favouriteContext.removeFavourite(mealId);
+    } else {
+      favouriteContext.addFavourite(mealId);
+    }
+  };
+
   useEffect(() => {
     navigation.setOptions({
       title: meal.title,
-      headerRight: () => <Icon name="heart" size={24} color="#eeeeee" />,
+      headerRight: () => (
+        <Icon
+          name={isFavourite ? "heart" : "heart-outline"}
+          size={24}
+          color="#eeeeee"
+          onPress={favouriteMealHandler}
+        />
+      ),
     });
-  }, []);
+  }, [isFavourite]);
 
   return (
     <View style={styles.screen}>
@@ -40,6 +59,7 @@ const MealDetailScreen = () => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
+    paddingBottom: 60,
     backgroundColor: "#222831",
   },
   image: {
